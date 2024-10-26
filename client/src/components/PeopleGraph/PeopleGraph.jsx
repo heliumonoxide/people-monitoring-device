@@ -9,7 +9,7 @@ const LineChart = () => {
     options: {
       colors: ['#581c87'],
       chart: {
-        height: 350,
+        height: 200,
         type: 'line',
         zoom: { enabled: true },
       },
@@ -29,10 +29,10 @@ const LineChart = () => {
         text: 'Jumlah orang terbaru di Halte FTUI',
         align: 'left',
         style: {
-            fontSize:  '14px',
-            fontWeight:  'bold',
-            color:  '#581c87'
-          },
+          fontSize: '14px',
+          fontWeight: 'bold',
+          color: '#581c87'
+        },
       },
       grid: {
         row: {
@@ -45,18 +45,18 @@ const LineChart = () => {
         shared: true, // Allows displaying multiple series data
         intersect: false, // Show tooltip even if not hovering directly over a point
         x: {
-            show: true,
-            format: 'dd MMM yyyy HH:mm:ss',
-          },
+          show: true,
+          format: 'dd MMM yyyy HH:mm:ss',
+        },
         y: {
-            show: true,
-            formatter: function(val) {
-                return `${val} orang`
-             }
+          show: true,
+          formatter: function (val) {
+            return `${val} orang`
+          }
         },
         markers: {
-            show: true,
-            colors: '#581c87'
+          show: true,
+          colors: '#581c87'
         }
       },
     },
@@ -102,7 +102,7 @@ const LineChart = () => {
         options={chartData.options}
         series={chartData.series}
         type="line"
-        height={350}
+        height={200}
       />
     </div>
   );

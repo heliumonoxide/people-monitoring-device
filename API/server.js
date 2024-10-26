@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const imageRoutes = require('./routes/imageRoutes');
+const firebaseRoutes = require('./routes/firebaseRoutes');
 const { db, bucket } = require('./configs/firebase');
 
 const app = express();
@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Use the imported routes
-app.use('/api', imageRoutes);
+app.use('/api', firebaseRoutes);
 
 // Example root endpoint
 app.get('/', (req, res) => {
