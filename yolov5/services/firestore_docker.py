@@ -3,11 +3,11 @@ from firebase_admin import credentials, storage
 from firebase_admin import firestore
 
 
-class Connection:
+class Connection_Docker:
     def initialize_sdk(self):
         # Use a service account.
         self.cred = credentials.Certificate(
-            "env/despro-project-monitoring-firebase-adminsdk-ze39m-e0a5a52f3f.json"
+            "/app/env/despro-project-monitoring-firebase-adminsdk-ze39m-e0a5a52f3f.json"
         )
 
         self.app = firebase_admin.initialize_app(
