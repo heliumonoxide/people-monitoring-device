@@ -1,0 +1,20 @@
+FROM python:3.12.6
+
+WORKDIR /app
+
+# Install libGL and other dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0
+
+# Copy requirements and install them
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
+COPY . .
+
+CMD ["python", "watch_file_docker.py"]
+
+# Command to build image: docker build -t yolov5-project .
+# Command to run image to make container: docker run --privileged -it --rm -v "your\path\to\yolo\project":/app yolov5-project
