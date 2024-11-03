@@ -22,6 +22,7 @@ class Main():
         
         model = torch.hub.load('/app/yolov5', 'custom', WEIGHT_PATH, source='local')
         # model = torch.hub.load('ultralytics/yolov5', 'custom', WEIGHT_PATH, trust_repo=True)
+      
         model.classes = [0]
         # img = 'data/images/image.jpg'  # or file, Path, PIL, OpenCV, numpy, list
         results = model(self.img_path)
