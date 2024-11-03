@@ -1,8 +1,8 @@
 {
-    "functions": {
-      "index.js": {
-        "runtime": "nodejs18.x"
-      }
+  "functions": {
+    "api/index.js": {
+      "memory": 1024,
+      "maxDuration": 30
     }
   }
-  
+}
