@@ -30,9 +30,9 @@ const ImageViewer = () => {
     }, []);
 
     return (
-        <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="px-6 pt-4 pb-1 text-center">
-                <h2 className="text-xl font-bold mb-2">Newest Uploaded Image</h2>
+                <h2 className="text-xl text-purple-500 font-bold mb-2">Newest Uploaded Image</h2>
             </div>
             <div className="px-6 pt-2 pb-4">
                 {error ? (
