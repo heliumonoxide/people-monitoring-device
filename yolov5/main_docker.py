@@ -19,8 +19,9 @@ class Main():
         self.result_dir_docker = RESULT_PATH+"/"+self.file_name
         print(f"Blob directory for upload image {self.result_dir_blob} ")
         print(f"docker directory for result image {self.result_dir_docker} ")
-
-        model = torch.hub.load('ultralytics/yolov5', 'custom', WEIGHT_PATH)
+        
+        model = torch.hub.load('/app/yolov5', 'custom', WEIGHT_PATH, source='local')
+        # model = torch.hub.load('ultralytics/yolov5', 'custom', WEIGHT_PATH, trust_repo=True)
         model.classes = [0]
         # img = 'data/images/image.jpg'  # or file, Path, PIL, OpenCV, numpy, list
         results = model(self.img_path)
