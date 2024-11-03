@@ -3,15 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 
-const LineChart = () => {
+const SpeedGraph = () => {
   const [chartData, setChartData] = useState({
-    series: [{ name: 'Jumlah orang', data: [] }],
+    series: [{ name: 'Kecepatan', data: [] }],
     options: {
       colors: ['#581c87'],
       chart: {
         height: 200,
         type: 'line',
-        zoom: { enabled: true },
+        zoom: { enabled: true},
         offsetY: -20,
       },
       dataLabels: { enabled: false },
@@ -27,7 +27,7 @@ const LineChart = () => {
         type: 'datetime', // Set the type to datetime
       },
       title: {
-        text: 'Jumlah orang terbaru di Halte FTUI',
+        text: 'Kecepatan terbaru di Halte FTUI',
         align: 'left',
         style: {
           fontSize: '14px',
@@ -52,7 +52,7 @@ const LineChart = () => {
         y: {
           show: true,
           formatter: function (val) {
-            return `${val} orang`
+            return `${val} km/h`
           }
         },
         markers: {
@@ -66,14 +66,14 @@ const LineChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/result');
+        const response = await fetch('/api/ethic-count');
         const data = await response.json();
 
         // Ensure we have an array
         const results = Array.isArray(data) ? data : [];
 
         // Extract sums and format timeAdded
-        const sums = results.map(doc => doc.sum); // Extract the sum field
+        const speeds = results.map(doc => doc.speed); // Extract the sum field
         const timeAdded = results.map(doc => {
           const utcDate = new Date(doc.timeAdded._seconds * 1000); // Create a date object
           const localDate = new Date(utcDate.setHours(utcDate.getHours() + 7)); // Adjust to UTC+7
@@ -83,7 +83,7 @@ const LineChart = () => {
         // Update chart data
         setChartData(prevState => ({
           ...prevState,
-          series: [{ ...prevState.series[0], data: sums }],
+          series: [{ ...prevState.series[0], data: speeds }],
           options: {
             ...prevState.options,
             xaxis: { categories: timeAdded }, // Set the x-axis categories
@@ -109,4 +109,4 @@ const LineChart = () => {
   );
 };
 
-export default LineChart;
+export default SpeedGraph;

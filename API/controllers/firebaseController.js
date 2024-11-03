@@ -37,6 +37,32 @@ exports.getNewestSum = async (req, res) => {
     }
 };
 
+// Get image processing result
+exports.getNewestSumOnly = async (req, res) => {
+    try {
+        const snapshot = await db
+            .collection('persons-sum')
+            .orderBy('timeAdded', 'desc') // Order by timeAdded field in descending order
+            .limit(1) // Limit the results to 1 document
+            .get();
+
+        // Check if any documents were returned
+        if (snapshot.empty) {
+            return res.status(404).send('No data found.');
+        }
+
+        const numbers = [];
+        snapshot.forEach(doc => {
+            numbers.push({ id: doc.id, sum: doc.data().sum, timeAdded: doc.data().timeAdded });
+        });
+
+        res.status(200).json(numbers); // Return the newest document as a single object
+    } catch (error) {
+        console.error('Error reading from Firestore:', error);
+        res.status(500).send('Error reading from Firestore.');
+    }
+};
+
 // Get images from firebase
 exports.getNewestImage = async (req, res) => {
     try {
@@ -61,5 +87,80 @@ exports.getNewestImage = async (req, res) => {
     } catch (error) {
         console.error('Error retrieving image:', error);
         res.status(500).json({ message: 'Error retrieving image' });
+    }
+};
+
+exports.getHighestSum = async (req, res) => {
+    try {
+        const snapshot = await db
+            .collection('persons-sum')
+            .orderBy('sum', 'desc')
+            .limit(1) // Limit the results to 1 document
+            .get();
+
+        // Check if any documents were returned
+        if (snapshot.empty) {
+            return res.status(404).send('No data found.');
+        }
+
+        const numbers = [];
+        snapshot.forEach(doc => {
+            numbers.push({ id: doc.id, sum: doc.data().sum, timeAdded: doc.data().timeAdded });
+        });
+
+        res.status(200).json(numbers); // Return the newest document as a single object
+    } catch (error) {
+        console.error('Error reading from Firestore:', error);
+        res.status(500).send('Error reading from Firestore.');
+    }
+};
+
+exports.getResultEthic = async (req, res) => {
+    try {
+        const snapshot = await db
+            .collection('ethical-count')
+            .orderBy('timeAdded', 'desc')
+            .limit(10) // Limit the results to 1 document
+            .get();
+
+        // Check if any documents were returned
+        if (snapshot.empty) {
+            return res.status(404).send('No data found.');
+        }
+
+        const numbers = [];
+        snapshot.forEach(doc => {
+            numbers.push({ id: doc.id, speed: doc.data().speed, timeAdded: doc.data().timeAdded });
+        });
+
+        res.status(200).json(numbers); // Return the newest document as a single object
+    } catch (error) {
+        console.error('Error reading from Firestore:', error);
+        res.status(500).send('Error reading from Firestore.');
+    }
+};
+
+exports.getResultEthicHighest = async (req, res) => {
+    try {
+        const snapshot = await db
+            .collection('ethical-count')
+            .orderBy('speed', 'desc')
+            .limit(1) // Limit the results to 1 document
+            .get();
+
+        // Check if any documents were returned
+        if (snapshot.empty) {
+            return res.status(404).send('No data found.');
+        }
+
+        const numbers = [];
+        snapshot.forEach(doc => {
+            numbers.push({ id: doc.id, speed: doc.data().speed, timeAdded: doc.data().timeAdded });
+        });
+
+        res.status(200).json(numbers); // Return the newest document as a single object
+    } catch (error) {
+        console.error('Error reading from Firestore:', error);
+        res.status(500).send('Error reading from Firestore.');
     }
 };
