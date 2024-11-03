@@ -1,6 +1,6 @@
 venv/
 env/
-
+*.tar
 __pycache__/
 # Create virtual environment by running this command:
 # python -m venv venv

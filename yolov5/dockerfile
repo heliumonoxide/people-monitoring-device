@@ -6,13 +6,13 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0
+    
+# Copy project files
+COPY . /app
 
 # Copy requirements and install them
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy project files
-COPY . .
+# COPY requirements.txt .
+RUN pip install --default-timeout=10000 -r requirements.txt
 
 CMD ["python", "watch_file_docker.py"]
 
