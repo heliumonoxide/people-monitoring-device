@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',  // Backend server
+        target: 'https://webapi-two-flax.vercel.app',  // Backend server
         changeOrigin: true,
         secure: false,
         // rewrite: (path) => path.replace(/^\/api/, ''),  // Rewrite the URL to match your backend route

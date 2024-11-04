@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const firebaseRoutes = require('./routes/firebaseRoutes');
-const { db, bucket } = require('./configs/firebase');
+const firebaseRoutes = require('../routes/firebaseRoutes');
+const { db, bucket } = require('../configs/firebase');
 
 const app = express();
 const port = process.env.PORT || 5000;
