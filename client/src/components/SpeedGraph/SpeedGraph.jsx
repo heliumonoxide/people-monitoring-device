@@ -66,7 +66,7 @@ const SpeedGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/ethic-count');
+        const response = await fetch('https://webapi-two-flax.vercel.app/api/ethic-count');
         const data = await response.json();
 
         // Ensure we have an array

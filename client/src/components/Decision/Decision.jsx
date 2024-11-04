@@ -11,8 +11,8 @@ const Decision = () => {
         const fetchHighestCount = async () => {
             try {
                 // Extract sums and format timeAdded
-                const response = await fetch('/api/highest'); // Assuming this is the endpoint
-                const response2 = await fetch('/api/newest-sum');
+                const response = await fetch('https://webapi-two-flax.vercel.app/api/highest'); // Assuming this is the endpoint
+                const response2 = await fetch('https://webapi-two-flax.vercel.app/api/newest-sum');
                 if (!response.ok) throw new Error('Failed to fetch data');
                 if (!response2.ok) throw new Error('Failed to fetch data');
                 const data = await response.json();

@@ -9,7 +9,7 @@ const ImageViewer = () => {
     useEffect(() => {
         const fetchNewestImage = async () => {
             try {
-                const response = await fetch('/api/newest-image');
+                const response = await fetch('https://webapi-two-flax.vercel.app/api/newest-image');
                 if (!response.ok) {
                     throw new Error('Error fetching the newest image');
                 }
