@@ -17,4 +17,14 @@ RUN pip install --default-timeout=10000 -r requirements.txt
 CMD ["python", "watch_file_docker.py"]
 
 # Command to build image: docker build -t yolov5-project .
-# Command to run image to make container: docker run --privileged -it --rm -v "your\path\to\yolo\project":/app yolov5-project
+# Command to run image to make container: docker run --privileged -it --rm -v "your\path\to\yolo\project":/app yolov5-project --> this is for sharing volume as whole project with host
+# In VM run this:
+    # docker load -i yolov5_project_monitoring.tar --> loading the tar zipped file to load image
+    # realpath -s esp_images --> check watched images folder path
+    # docker run -d -v /home/bryan_indarto_giovanni/esp_images:/app/data/images yolov5-project-v9
+    # docker ps --> to see the container id ran
+    # docker exec -it 9cae5011a3ff /bin/sh --> 9cae5011a3ff is the container id
+    # python watch_file_docker.py --> for running the watchdog
+
+    # If want to stop the container, run this command:
+        # docker stop 9cae5011a3ff --> container id
