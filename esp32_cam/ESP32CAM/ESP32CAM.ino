@@ -1,4 +1,18 @@
+#include <WiFi.h>
+#include <WiFiAP.h>
+#include <WiFiClient.h>
+#include <WiFiGeneric.h>
+#include <WiFiMulti.h>
+#include <WiFiScan.h>
+#include <WiFiServer.h>
+#include <WiFiSTA.h>
+#include <WiFiType.h>
+#include <WiFiUdp.h>
+
+#include "ESP32_FTPClient.h"
+#include <octocat.h>
 #include "esp_camera.h"
+
 
 #define PWDN_GPIO_NUM    41
 #define RESET_GPIO_NUM   42
@@ -20,9 +34,32 @@
 
 // Thanks to NORVI for supplying these configuration of ESP32 S3 with OV5640 https://www.esp32.com/viewtopic.php?f=17&t=40731 information: https://github.com/IndustrialArduino/NORVI-ESP32-CAMERA
 
+#define WIFI_SSID "dapoersemar"
+#define WIFI_PASS "warkopds"
+
+char ftp_server[] = "VM External IP";
+uint16_t ftp_port = 21;
+char ftp_user[]   = "VM user username";
+char ftp_pass[]   = "VM user password";
+
+ESP32_FTPClient ftp(ftp_server, ftp_port, ftp_user, ftp_pass);
+
 void setup() {
   Serial.begin(115200);
-  
+
+  WiFi.mode(WIFI_STA);
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(WIFI_SSID);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.print("ESP32-CAM IP Address: ");
+  Serial.println(WiFi.localIP());
+
   // Camera configuration
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -51,61 +88,61 @@ void setup() {
   config.jpeg_quality = 10;
   config.fb_count = 1;
 
-   if(config.pixel_format == PIXFORMAT_JPEG){
-      if(psramFound()){
-        config.jpeg_quality = 5;
-        config.fb_count = 2;
-        config.grab_mode = CAMERA_GRAB_LATEST;
-      } else {
-        // Limit the frame size when PSRAM is not available
-        config.frame_size = FRAMESIZE_QVGA;;
-        config.fb_location = CAMERA_FB_IN_DRAM;
-      }
-    } else {
-      // Best option for face detection/recognition
-      config.frame_size = FRAMESIZE_240X240;
-  #if CONFIG_IDF_TARGET_ESP32S3
+  if (config.pixel_format == PIXFORMAT_JPEG) {
+    if (psramFound()) {
+      config.jpeg_quality = 5;
       config.fb_count = 2;
-  #endif
+      config.grab_mode = CAMERA_GRAB_LATEST;
+    } else {
+      // Limit the frame size when PSRAM is not available
+      config.frame_size = FRAMESIZE_QVGA;;
+      config.fb_location = CAMERA_FB_IN_DRAM;
     }
-  
-  // Initialize the camera  
-    esp_err_t err = esp_camera_init(&config);
-    if (err != ESP_OK) {
-      Serial.printf("Camera init failed with error 0x%x", err);
-      return;
-    }
+  } else {
+    // Best option for face detection/recognition
+    config.frame_size = FRAMESIZE_240X240;
+#if CONFIG_IDF_TARGET_ESP32S3
+    config.fb_count = 2;
+#endif
+  }
+
+  // Initialize the camera
+  esp_err_t err = esp_camera_init(&config);
+  if (err != ESP_OK) {
+    Serial.printf("Camera init failed with error 0x%x", err);
+    return;
+  }
 
   sensor_t * s = esp_camera_sensor_get();
-    s->set_brightness(s, 0);     // -2 to 2
-    s->set_contrast(s, 2);       // -2 to 2
-    s->set_saturation(s, 0);     // -2 to 2
-    s->set_special_effect(s, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
-    s->set_whitebal(s, 1);       // 0 = disable , 1 = enable
-    s->set_awb_gain(s, 1);       // 0 = disable , 1 = enable
-    s->set_wb_mode(s, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
-    s->set_exposure_ctrl(s, 0);  // 0 = disable , 1 = enable
-    s->set_aec2(s, 1);           // 0 = disable , 1 = enable
-    s->set_ae_level(s, 2);       // -2 to 2
-    s->set_aec_value(s, 800);    // 0 to 1200
-    s->set_gain_ctrl(s, 1);      // 0 = disable , 1 = enable
-    s->set_agc_gain(s, 0);       // 0 to 30
-    s->set_gainceiling(s, (gainceiling_t)6);  // 0 to 6
-    s->set_bpc(s, 1);            // 0 = disable , 1 = enable
-    s->set_wpc(s, 1);            // 0 = disable , 1 = enable
-    s->set_raw_gma(s, 1);        // 0 = disable , 1 = enable
-    s->set_lenc(s, 1);           // 0 = disable , 1 = enable
-    s->set_hmirror(s, 1);        // 0 = disable , 1 = enable
-    s->set_vflip(s, 0);          // 0 = disable , 1 = enable
-    s->set_dcw(s, 1);            // 0 = disable , 1 = enable
-    s->set_colorbar(s, 0);       // 0 = disable , 1 = enable
+  s->set_brightness(s, 0);     // -2 to 2
+  s->set_contrast(s, 2);       // -2 to 2
+  s->set_saturation(s, 0);     // -2 to 2
+  s->set_special_effect(s, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
+  s->set_whitebal(s, 1);       // 0 = disable , 1 = enable
+  s->set_awb_gain(s, 1);       // 0 = disable , 1 = enable
+  s->set_wb_mode(s, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
+  s->set_exposure_ctrl(s, 0);  // 0 = disable , 1 = enable
+  s->set_aec2(s, 1);           // 0 = disable , 1 = enable
+  s->set_ae_level(s, 2);       // -2 to 2
+  s->set_aec_value(s, 800);    // 0 to 1200
+  s->set_gain_ctrl(s, 1);      // 0 = disable , 1 = enable
+  s->set_agc_gain(s, 0);       // 0 to 30
+  s->set_gainceiling(s, (gainceiling_t)6);  // 0 to 6
+  s->set_bpc(s, 1);            // 0 = disable , 1 = enable
+  s->set_wpc(s, 1);            // 0 = disable , 1 = enable
+  s->set_raw_gma(s, 1);        // 0 = disable , 1 = enable
+  s->set_lenc(s, 1);           // 0 = disable , 1 = enable
+  s->set_hmirror(s, 1);        // 0 = disable , 1 = enable
+  s->set_vflip(s, 0);          // 0 = disable , 1 = enable
+  s->set_dcw(s, 1);            // 0 = disable , 1 = enable
+  s->set_colorbar(s, 0);       // 0 = disable , 1 = enable
 
   Serial.println("Camera ready");
 }
 
 void loop() {
   // Capture the image
-  
+
   camera_fb_t *fb = esp_camera_fb_get();
   if (!fb) {
     Serial.println("Camera capture failed");
@@ -113,14 +150,33 @@ void loop() {
     return;
   }
 
-  // Send the image size over Serial
-  Serial.write((uint8_t*)&fb->len, 4);
+  //  // Send the image size over Serial
+  //  Serial.write((uint8_t*)&fb->len, 4);
+  //
+  //  // Send the image data over Serial
+  //  Serial.write(fb->buf, fb->len);
+  //
+  //  // Return the frame buffer back to the driver for reuse
+  //  esp_camera_fb_return(fb);
 
-  // Send the image data over Serial
-  Serial.write(fb->buf, fb->len);
+  // Connect to FTP server
+  ftp.OpenConnection();
+  Serial.println("Connected to FTP server.");
+  
+  // Create or navigate to the desired FTP directory
+  ftp.ChangeWorkDir("/esp_images");
 
-  // Return the frame buffer back to the driver for reuse
-  esp_camera_fb_return(fb);
+  // Send the image as a .jpg file
+  ftp.InitFile("Type I");  // Switch to binary mode
+  ftp.NewFile("testImage.jpg");
+  Serial.println("Writing data to jpg image...");
+  ftp.WriteData((unsigned char*)fb->buf, fb->len);  // Send JPEG buffer
+  ftp.CloseFile();  // Finalize the file transfer
+  Serial.println("Done writing data to jpg image");
 
-  delay(20000); // Capture every 20 seconds
+  ftp.CloseConnection();
+  esp_camera_fb_return(fb);  // Release frame buffer
+
+
+  delay(40000); // Capture every 40 seconds
 }
