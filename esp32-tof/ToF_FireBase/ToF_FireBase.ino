@@ -8,8 +8,8 @@
 #define WIFI_PASSWORD "juandapst"
 
 // Firebase Credentials
-#define API_KEY "AIzaSyB0wy1cc1fyewLy0ABbzadSo--lULY9vnw"  // Firebase API key
-#define FIREBASE_PROJECT_ID "despro-project-monitoring"  // Firebase project ID
+#define API_KEY "API-KEY"  // Firebase API key
+#define FIREBASE_PROJECT_ID "PROJECT-ID"  // Firebase project ID
 
 // Constants
 const int MAX_SPEED_KMH = 40;   // Maximum allowed speed in km/h
