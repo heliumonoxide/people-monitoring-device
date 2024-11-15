@@ -21,7 +21,7 @@ CMD ["python", "watch_file_docker.py"]
 # In VM run this:
     # docker load -i yolov5_project_monitoring.tar --> loading the tar zipped file to load image
     # realpath -s esp_images --> check watched images folder path
-    # docker run -d -v /home/bryan_indarto_giovanni/esp_images:/app/data/images yolov5-project-v9
+    # docker run -d -v /home/niken/esp_images:/app/data/images yolov5-project-v9
     # docker ps --> to see the container id ran
     # docker exec -it 9cae5011a3ff /bin/sh --> 9cae5011a3ff is the container id
     # python watch_file_docker.py --> for running the watchdog
