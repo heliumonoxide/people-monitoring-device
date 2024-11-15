@@ -35,52 +35,20 @@
 
 // Thanks to NORVI for supplying these configuration of ESP32 S3 with OV5640 https://www.esp32.com/viewtopic.php?f=17&t=40731 information: https://github.com/IndustrialArduino/NORVI-ESP32-CAMERA
 // Also big thanks to Leonardo Bispo in https://github.com/ldab for developing ESP32_FTPClient
+// Before upload to your esp32 cam s3. make sure you use this in tools:
+// ESP32S3 Dev Module as board. Use OPI PSRAM (as PSRAM). the rest use default.
 
-#define WIFI_SSID "dapoersemar" // Your wifi name
-#define WIFI_PASS "warkopds" // Your wifi password
+#define WIFI_SSID "RedmiNote9Pro" // Your wifi name
+#define WIFI_PASS "conkoromu" // Your wifi password
 
 // Please make sure your wifi can access internet and have bandwidth since esp will be client of the wifi.
 
-char ftp_server[] = "VM External IP";
+char ftp_server[] = "Your VM External IP Address";
 uint16_t ftp_port = 21; // Usually used for FTP connection in port 21
-char ftp_user[]   = "VM Users username";
-char ftp_pass[]   = "VM Users password";
+char ftp_user[]   = "Your VM External Username";
+char ftp_pass[]   = "Your VM External Password";
 
-// Make sure your VM has set up FTP server with correct firewall configuration. using below command:
-// sudo apt-get update
-// sudo apt-get install vsftpd
-// vsftpd --version
-
-// Also, make sure the config of VSFTPD is also correct by using command in debian as below:
-// sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.bak --> for backup
-// sudo nano /etc/vsftpd.conf
-
-// Edit to:
-// Listen_ipv6=YES
-// anonymous_enable=NO
-// pasv_enable=YES
-// pasv_min_port=1024
-// pasv_max_port=1048
-// local_enable=YES
-// write_enable=YES
-// local_umask=022
-// dirmessage_enable=YES
-// use_localtime=YES
-// xferlog_enable=YES
-// connect_from_port_20=YES
-// chroot_local_user=YES
-// allow_writeable_chroot=YES
-// secure_root_dir=/var/run/vsftpd/empty
-// pam_service_name=vsftpd
-// rsa_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-// rsa_private_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
-// ssl_enable=NO
-
-// after saving by click ctrl+x and y then click enter. Now restart vsftpd server by running command:
-// sudo systemctl restart vsftpd
-// sudo systemctl status vsftpd
-
-ESP32_FTPClient ftp(ftp_server, ftp_port, ftp_user, ftp_pass);
+ESP32_FTPClient ftp(ftp_server, ftp_port, ftp_user, ftp_pass, 5000, 2); // timeout 5 sec and verbose 2 (for debugging version)
 
 void setup() {
   Serial.begin(115200);
@@ -169,11 +137,11 @@ void setup() {
   s->set_whitebal(s, 1);       // 0 = disable , 1 = enable
   s->set_awb_gain(s, 1);       // 0 = disable , 1 = enable
   s->set_wb_mode(s, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
-  s->set_exposure_ctrl(s, 0);  // 0 = disable , 1 = enable
+  s->set_exposure_ctrl(s, 1);  // 0 = disable , 1 = enable
   s->set_aec2(s, 1);           // 0 = disable , 1 = enable
   s->set_ae_level(s, 2);       // -2 to 2
   s->set_aec_value(s, 800);    // 0 to 1200
-  s->set_gain_ctrl(s, 1);      // 0 = disable , 1 = enable
+  s->set_gain_ctrl(s, 0);      // 0 = disable , 1 = enable
   s->set_agc_gain(s, 0);       // 0 to 30
   s->set_gainceiling(s, (gainceiling_t)6);  // 0 to 6
   s->set_bpc(s, 1);            // 0 = disable , 1 = enable
@@ -220,21 +188,21 @@ void loop() {
   // Connect to FTP server
   ftp.OpenConnection();
   Serial.println("Connected to FTP server.");
-  
+
   // Create or navigate to the desired FTP directory
   ftp.ChangeWorkDir("/esp_images");
 
   // Send the image as a .jpg file
   ftp.InitFile("Type I");  // Switch to binary mode
   ftp.NewFile(filename);
-  Serial.println("Writing data to jpg image...");
+
   ftp.WriteData((unsigned char*)fb->buf, fb->len);  // Send JPEG buffer
   ftp.CloseFile();  // Finalize the file transfer
   Serial.println("Done writing data to jpg image");
-
+  
   ftp.CloseConnection();
   esp_camera_fb_return(fb);  // Release frame buffer
 
 
-  delay(60000); // Capture every 60 seconds
+  delay(59000); // Capture every 60 seconds
 }
