@@ -68,12 +68,12 @@
 #include <sys/time.h> // For time functions
 
 // Wi-Fi and Firebase details
-#define WIFI_SSID "WIFI_SSID"
-#define WIFI_PASSWORD "WIFI_PASS"
-#define FIREBASE_PROJECT_ID "FIREBASE_ID"
-#define FIREBASE_API_KEY "FIREBASE_API_KEY"
-#define USER_EMAIL "USER_EMAIL"
-#define USER_PASSWORD "USER_PASS"
+#define WIFI_SSID "Tselhome-C041"
+#define WIFI_PASSWORD "61928826"
+#define FIREBASE_PROJECT_ID "despro-project-monitoring"
+#define FIREBASE_API_KEY "AIzaSyB0wy1cc1fyewLy0ABbzadSo--lULY9vnw"
+#define USER_EMAIL "thesnyo@gmail.com"
+#define USER_PASSWORD "despro1234"
 
 // Firebase setup
 WiFiClientSecure ssl_client;
