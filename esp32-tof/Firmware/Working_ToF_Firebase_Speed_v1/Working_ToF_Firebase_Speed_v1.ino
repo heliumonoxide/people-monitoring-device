@@ -70,10 +70,10 @@
 // Wi-Fi and Firebase details
 #define WIFI_SSID "Tselhome-C041"
 #define WIFI_PASSWORD "61928826"
-#define FIREBASE_PROJECT_ID "despro-project-monitoring"
-#define FIREBASE_API_KEY "AIzaSyB0wy1cc1fyewLy0ABbzadSo--lULY9vnw"
-#define USER_EMAIL "thesnyo@gmail.com"
-#define USER_PASSWORD "despro1234"
+#define FIREBASE_PROJECT_ID "YOUR FIREBASE PROJECT ID"
+#define FIREBASE_API_KEY "YOUR FIREBASE API KEY"
+#define USER_EMAIL "FIREBASE USER EMAIL"
+#define USER_PASSWORD "FIREBASE USER PASSWORD"
 
 // Firebase setup
 WiFiClientSecure ssl_client;
