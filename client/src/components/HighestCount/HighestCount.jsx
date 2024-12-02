@@ -19,7 +19,7 @@ const HighestCount = () => {
         
         const timeAdded = data.map(doc => {
             const utcDate = new Date(doc.timeAdded._seconds * 1000); // Create a date object
-            const localDate = new Date(utcDate.setHours(utcDate.getHours() + 7)); // Adjust to UTC+7
+            const localDate = new Date(utcDate.setHours(utcDate.getHours())); // Adjust to UTC+7
             return localDate.toString(); // Convert back to ISO string for chart
           });
         setHighestCount(sum); // Assuming API response format is { count: <number> }
