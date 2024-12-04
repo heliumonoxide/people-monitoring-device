@@ -1,7 +1,5 @@
 # Smart IoT Monitoring and AI System
 
-![Banner Github People Monitoring](https://github.com/user-attachments/assets/1b55aad2-3db4-4e4d-94a2-c7644a923621)
-
 This project is a complete IoT-based monitoring and AI solution designed to collect, process, and analyze data from ESP32 sensors and cameras, store it in Firebase, and deploy trained AI models for industrial automation. The entire system is architected with modern technologies, ensuring scalability, ease of use, and high performance.
 
 ---
